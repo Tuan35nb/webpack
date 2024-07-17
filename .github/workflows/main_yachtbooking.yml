@@ -27,11 +27,21 @@ jobs:
           npm run build --if-present
           npm test -- --passWithNoTests || true
       
-      - name: Upload artifact for deployment job
+      - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: node-app
-          path: .
+          name: build-artifact
+          path: ./build
+          retention-days: 1
+          concurrency: 10
+
+      - name: Upload node_modules artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: node-modules-artifact
+          path: ./node_modules
+          retention-days: 1
+          concurrency: 10
 
   deploy:
     runs-on: ubuntu-latest
@@ -41,10 +51,15 @@ jobs:
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     
     steps:
-      - name: Download artifact from build job
+      - name: Download build artifact from build job
         uses: actions/download-artifact@v4
         with:
-          name: node-app
+          name: build-artifact
+      
+      - name: Download node_modules artifact from build job
+        uses: actions/download-artifact@v4
+        with:
+          name: node-modules-artifact
       
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v3
@@ -52,5 +67,5 @@ jobs:
         with:
           app-name: 'YachtBooking'
           slot-name: 'Production'
-          package: './dist'
+          package: './build'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_853B61FC0C374EA580B2E93E075548A7 }}
