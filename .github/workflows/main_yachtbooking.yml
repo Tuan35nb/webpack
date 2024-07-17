@@ -27,21 +27,13 @@ jobs:
           npm run build --if-present
           npm test -- --passWithNoTests || true
       
-      - name: Upload build artifact
+      - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
-          name: build-artifact
+          name: node-app
           path: ./build
           retention-days: 1
-          concurrency: 10
-
-      - name: Upload node_modules artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: node-modules-artifact
-          path: ./node_modules
-          retention-days: 1
-          concurrency: 10
+          compression-level: 1
 
   deploy:
     runs-on: ubuntu-latest
@@ -51,15 +43,10 @@ jobs:
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     
     steps:
-      - name: Download build artifact from build job
+      - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
-          name: build-artifact
-      
-      - name: Download node_modules artifact from build job
-        uses: actions/download-artifact@v4
-        with:
-          name: node-modules-artifact
+          name: node-app
       
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v3
