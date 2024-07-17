@@ -53,4 +53,4 @@ jobs:
           app-name: 'YachtBooking'
           slot-name: 'Production'
           package: .
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_E541B478BC3543C4B54F48187530BAA1 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_CBB75C04B4CF4EB68D32BF4E958E9874 }}
