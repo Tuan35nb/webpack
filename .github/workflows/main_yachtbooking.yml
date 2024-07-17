@@ -17,15 +17,15 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Set up Node.js version
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v3
         with:
           node-version: '20.x'
 
-      - name: Install dependencies, build, and test
+      - name: npm install, build, and test
         run: |
           npm install
           npm run build --if-present
-          npm test -- --passWithNoTests
+          npm run test --if-present
       
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
@@ -52,5 +52,5 @@ jobs:
         with:
           app-name: 'YachtBooking'
           slot-name: 'Production'
-          package: './dist'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_853B61FC0C374EA580B2E93E075548A7 }}
+          package: .
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_E7EC29D0141A453E9E9248AF42FE0EF9 }}
